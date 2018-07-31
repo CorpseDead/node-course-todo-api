@@ -16,7 +16,7 @@ MongoClient.connect("mongodb://localhost:27017/TodoApp", (error, client) => {
     // });
 
     db.collection('Todos').find({
-        _id: ObjectID('5b5eefc8f56e55089f37136d')
+        _id: ObjectID('') //Add an ID here
     }).toArray()
     .then((docs) => {
         console.log("Todos");

@@ -1,36 +1,38 @@
+// const MongoClient = require('mongodb').MongoClient;
 const {MongoClient, ObjectID} = require('mongodb');
 
-MongoClient.connect("mongodb://localhost:27017/TodoApp", (error, client) => {
-    if(error) {
-        return console.log("Unable to connect to MongoDB server");
-    }  
-    console.log("Connected to MongoDB server");
-    const db = client.db("TodoApp");
+MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, db) => {
+  if (err) {
+    return console.log('Unable to connect to MongoDB server');
+  }
+  console.log('Connected to MongoDB server');
 
-    // db.collection("Todos").findOneAndUpdate({
-    //     _id: new ObjectID("5b5f067830cea1ec0d149231")
-    // }, {
-    //     $set: {completed: true}
-    // }, {
-    //     returnOriginal: false
-    // }).then(result => {
-    //     console.log(result);
-    // }, err => {
-    //     console.log("The update failed, ", err);
-    // });
+  // db.collection('Todos').findOneAndUpdate({
+  //   _id: new ObjectID('57bc4b15b3b6a3801d8c47a2')
+  // }, {
+  //   $set: {
+  //     completed: true
+  //   }
+  // }, {
+  //   returnOriginal: false
+  // }).then((result) => {
+  //   console.log(result);
+  // });
 
-    db.collection("Users").findOneAndUpdate({
-        _id: new ObjectID("5b5ef6479f9a520963c29e00")
-    }, {
-        $set: {title: "Legacy is but a hindrance"},
-        $inc: {age: 1}
-    }, {
-        returnOriginal: false
-    }).then(result => {
-        console.log(result);
-    }, err => {
-        console.log("The update failed, ", err);
-    });
+  db.collection('Users').findOneAndUpdate({
+    _id: new ObjectID('') //Add an ID here
+  }, {
+    $set: {
+      name: 'Andrew'
+    },
+    $inc: {
+      age: 1
+    }
+  }, {
+    returnOriginal: false
+  }).then((result) => {
+    console.log(result);
+  });
 
-    client.close();
+  // db.close();
 });
