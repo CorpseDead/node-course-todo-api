@@ -1,0 +1,3 @@
+const secret = "lmníliyuhíASDSAE3eqaASDJAskndoanpojqeo3mPSAIODJq3noeli1j29onfasmdLASkdij asodAIHNYdoashjdoajdaGAS9DHOGh97gsaiuhdbuaisdhas98fgahsiufhaodzisfgasoudjaö9djhaoiASDASF21434JIFJAOPIJ";
+
+module.exports = {secret};
