@@ -3,6 +3,7 @@ const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const {secret} = require('./../db/secret');
+const bcrypt = require('bcryptjs');
 
 /**
  * {
@@ -74,31 +75,40 @@ UserSchema.methods.generateAuthToken = function () {
     const user = this;
     const access = 'auth';
     const token = jwt.sign({_id: user._id.toHexString(), access}, secret).toString();
-
-    user.tokens.concat([{
-        access,
-        token
-    }]);
-
+    user.tokens.push({access, token});
     return user.save().then(() => {
         return token;
     });
 };
 
 UserSchema.statics.findByToken = function (token) {
-    const user = this;
+    const User = this;
     let decoded;
     try{
         decoded = jwt.verify(token, secret);
     }catch(e){
-        return Promise.reject("I can pass a value which will be the 'e' on the server");
+        return Promise.reject();
     }
-    return user.findOne({
+    return User.findOne({
         '_id': decoded._id,
         'tokens.token': token,
         'tokens.access': 'auth'
     });
 };
+
+UserSchema.pre('save', function (next){
+    let user = this;
+    if(user.isModified('password')){
+        bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(user.password, salt, (err, hash) => {
+                user.password = hash;
+                next();
+            });
+        });
+    }else{
+        next();
+    }
+});
 
 const User = mongoose.model("User", UserSchema);
 
