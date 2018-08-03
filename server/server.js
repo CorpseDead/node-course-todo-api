@@ -44,12 +44,17 @@ app.get('/todos', authenticate, (req, res) => {
     });
 });
 
-app.get('/todos/:id', (req, res) => {    
+
+
+
+
+
+app.get('/todos/:id', authenticate, (req, res) => {    
     const id = req.params.id;
     if(!ObjectID.isValid(id)){
         res.status(404).send("Invalid id! You must have missed a character!");
     }else{
-        Todo.findById(id).then(todo => {
+        Todo.findOne({_id: id, _creator: req.user._id}).then(todo => {
             if(!todo){
                 res.status(404).send("We're sorry, but there is no item with this id. :(");
             }else{
@@ -66,7 +71,7 @@ app.delete('/todos/:id', (req, res) => {
         return res.status(404).send();
     }
 
-    Todo.findByIdAndRemove(id).then((todo) => {
+    Todo.findOneAndRemove({_id: id, _creator: req.user._id}).then((todo) => {
         if (!todo) {
         return res.status(404).send();
         }
@@ -77,7 +82,7 @@ app.delete('/todos/:id', (req, res) => {
     });
 });
 
-app.patch('/todos/:id', (req, res) => {
+app.patch('/todos/:id', authenticate, (req, res) => {
     const id = req.params.id;
     const body = _.pick(req.body, ['text', 'completed']);
 
@@ -92,7 +97,7 @@ app.patch('/todos/:id', (req, res) => {
         body.completedAt = null;
     }
 
-    Todo.findByIdAndUpdate(id, {$set: body}, {new: true})
+    Todo.findOneAndUpdate({_id: id, _creator: req.user._id}, {$set: body}, {new: true})
         .then((todo) => {
             if (!todo) {
             return res.status(404).send();
@@ -103,6 +108,10 @@ app.patch('/todos/:id', (req, res) => {
             res.status(400).send();
         })
 });
+
+
+
+
 
 //POST /users
 app.post('/users', (req, res) => {
